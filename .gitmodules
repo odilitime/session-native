@@ -1,0 +1,15 @@
+[submodule "opengem/net"]
+	path = opengem/net
+	url = https://gitgud.io/Sapphire/opengem/opengem_net.git
+[submodule "opengem/ui"]
+	path = opengem/ui
+	url = https://gitgud.io/Sapphire/opengem/opengem_ui.git
+[submodule "opengem/parsers"]
+	path = opengem/parsers
+	url = https://gitgud.io/Sapphire/opengem/opengem_parsers.git
+[submodule "opengem/timer"]
+	path = opengem/timer
+	url = https://gitgud.io/Sapphire/opengem/opengem_timer.git
+[submodule "open/datastructures"]
+	path = open/datastructures
+	url = https://gitgud.io/Sapphire/opengem/opengem_datastructures.git
