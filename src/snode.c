@@ -2,6 +2,8 @@
 #include "src/include/opengem_datastructures.h"
 #include <stdio.h> // for printf
 
+#include "include/opengem/parsers/scripting/json.h"
+
 const char *seedNode = "https://storage.seed1.loki.network/json_rpc";
 
 void handle_http(const struct http_request *const req, struct http_response *const resp) {
