@@ -17,6 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: install dependencies
+      run: apt-get install libfreetype6-dev libglfw3-dev
+
     - name: Checkout git submodules
       run: git submodule update --init --recursive
 
