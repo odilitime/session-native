@@ -10,6 +10,6 @@
 [submodule "opengem/timer"]
 	path = opengem/timer
 	url = https://gitgud.io/Sapphire/opengem/opengem_timer.git
-[submodule "open/datastructures"]
-	path = open/datastructures
+[submodule "opengem/datastructures"]
+	path = opengem/datastructures
 	url = https://gitgud.io/Sapphire/opengem/opengem_datastructures.git
