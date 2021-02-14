@@ -10,7 +10,7 @@ jobs:
   macos-build:
     runs-on: macos-10.14
     env: 
-      MACOSX_DEPLOYMENT_TARGET: 10.6
+      MACOSX_DEPLOYMENT_TARGET: 10.9
     steps:
     - uses: actions/checkout@v2
 
