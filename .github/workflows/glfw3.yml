@@ -51,11 +51,11 @@ jobs:
     - name: Fix homebrewisms
       working-directory: ${{github.workspace}}/build
       shell: bash
-      run: 
-      - install_name_tool -change /usr/local/opt/glfw/lib/libglfw.3.dylib @executable_path/libglfw.3.dylib src/session-native
-      - install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib src/session-native
-      - cp /usr/local/opt/glfw/lib/libglfw.3.dylib ${{github.workspace}}/build/src
-      - cp /usr/local/opt/freetype/lib/libfreetype.6.dylib ${{github.workspace}}/build/src
+      run: |
+        install_name_tool -change /usr/local/opt/glfw/lib/libglfw.3.dylib @executable_path/libglfw.3.dylib src/session-native
+        install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib src/session-native
+        cp /usr/local/opt/glfw/lib/libglfw.3.dylib ${{github.workspace}}/build/src
+        cp /usr/local/opt/freetype/lib/libfreetype.6.dylib ${{github.workspace}}/build/src
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
