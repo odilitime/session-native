@@ -54,8 +54,10 @@ jobs:
       run: |
         install_name_tool -change /usr/local/opt/glfw/lib/libglfw.3.dylib @executable_path/libglfw.3.dylib src/session-native
         install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib src/session-native
-        cp /usr/local/opt/glfw/lib/libglfw.3.dylib ${{github.workspace}}/build/src
-        cp /usr/local/opt/freetype/lib/libfreetype.6.dylib ${{github.workspace}}/build/src
+        cp /usr/local/opt/glfw/lib/libglfw.3.dylib src
+        cp /usr/local/opt/freetype/lib/libfreetype.6.dylib src
+        install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib @executable_path/libpng16.16.dylib src/libfreetype.6.dylib
+        cp /usr/local/opt/libpng/lib/libpng16.16.dylib src
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
@@ -64,6 +66,7 @@ jobs:
           path: |
             ${{github.workspace}}/build/src/libglfw.3.dylib
             ${{github.workspace}}/build/src/libfreetype.6.dylib
+            ${{github.workspace}}/build/src/libpng16.16.dylib
             ${{github.workspace}}/build/src/session-native
             ${{github.workspace}}/build/src/Resources
 
