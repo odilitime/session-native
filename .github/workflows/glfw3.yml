@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: install dependencies
-      run: brew install glfw openssl
+      run: brew install glfw openssl mbedtls
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
