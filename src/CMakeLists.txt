@@ -1,7 +1,9 @@
 add_executable(session-native
   session-native
-  snode.h
-  snode.c
+snode.h
+snode.c
+jsonrpc.h
+jsonrpc.c
 )
 
 target_link_libraries(session-native
