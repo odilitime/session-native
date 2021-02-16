@@ -1,9 +1,5 @@
 add_executable(session-native
   session-native
-snode.h
-snode.c
-jsonrpc.h
-jsonrpc.c
 )
 
 target_link_libraries(session-native
@@ -12,6 +8,7 @@ target_link_libraries(session-native
   opengem::parsers
   opengem::timer
   opengem::net
+  opengem::session
 )
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
