@@ -12,7 +12,7 @@ ssize_t getline(char **linep, size_t *np, FILE *stream);
 #include "include/opengem/ui/components/component_input.h"
 #include "include/opengem/ui/app.h"
 
-#include "snode.h"
+#include "include/opengem/session/snode.h"
 
 /*
 - text selection
