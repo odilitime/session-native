@@ -13,3 +13,6 @@
 [submodule "opengem/datastructures"]
 	path = opengem/datastructures
 	url = https://gitgud.io/Sapphire/opengem/opengem_datastructures.git
+[submodule "opengem/session"]
+	path = opengem/session
+	url = https://gitgud.io/Sapphire/opengem/opengem_session.git
