@@ -30,6 +30,13 @@ include(${CPM_DIR}/CPM.cmake)
 # CPM Modules
 #------------------------------------------------------------------------------
 
+# ++ MODULE: opengem_session
+CPM_AddModule("opengem_session"
+  SOURCE_DIR opengem/session
+  USE_EXISTING_VER true
+  SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_session.git"
+)
+
 # ++ MODULE: opengem_net
 CPM_AddModule("opengem_net"
   SOURCE_DIR opengem/net
@@ -37,12 +44,14 @@ CPM_AddModule("opengem_net"
   SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_net.git"
 )
 
+# ++ MODULE: opengem_ui
 CPM_AddModule("opengem_ui"
   SOURCE_DIR opengem/ui
   USE_EXISTING_VER true
   SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_ui.git"
 )
 
+# ++ MODULE: opengem_parsers
 # we either export it in net
 # or we include it here (and figure out how to fix double definitions)
 CPM_AddModule("opengem_parsers"
@@ -51,6 +60,7 @@ CPM_AddModule("opengem_parsers"
   SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_parsers.git"
 )
 
+# ++ MODULE: opengem_timer
 # even tho ui includes this, we use it directly, so I think we can include it directly
 # yea ui doesn't export it... but should it?
 CPM_AddModule("opengem_timer"
@@ -59,6 +69,7 @@ CPM_AddModule("opengem_timer"
   SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_timer.git"
 )
 
+# ++ MODULE: opengem_ui
 # is exported in ui...
 CPM_AddModule("opengem_datastructures"
   SOURCE_DIR opengem/datastructures
