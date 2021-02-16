@@ -24,6 +24,8 @@ ssize_t getline(char **linep, size_t *np, FILE *stream);
 (fix backend, so we can see if polling works)
 */
 
+extern struct dynList snodeURLs;
+
 struct app session;
 //struct input_component *textarea = 0;
 struct input_component *sendBar = 0;
@@ -152,12 +154,15 @@ void onkeyup(struct window *win, int key, int scancode, int mod, void *user) {
 }
 
 int main(int argc, char *argv[]) {
+  time_t t;
+  srand((unsigned) time(&t));
   thread_spawn();
   if (app_init(&session)) {
     printf("compiled with no renders\n");
     return 1;
   }
   goSnodes();
+  printf("Bootstrapped[%zu]\n", (size_t)snodeURLs.count);
   
   FILE *fp = fopen("token.txt", "r");
   char *token = 0;
@@ -169,6 +174,7 @@ int main(int argc, char *argv[]) {
       //printf("Retrieved line of length %zu :\n", read);
       //printf("%s\n", line);
       token = strdup(line);
+      free(line);
     }
     fclose(fp);
   }
@@ -177,6 +183,21 @@ int main(int argc, char *argv[]) {
   } else {
     //createLoginWindow(&tap);
   }
+  
+  const char *pubKeyHexStr = "05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e";
+  const char *pos = pubKeyHexStr;
+  unsigned char val[32];
+  for (size_t count = 0; count < sizeof val/sizeof *val; count++) {
+    sscanf(pos, "%2hhx", &val[count]);
+    pos += 2;
+  }
+  
+  printf("Pubkey: ");
+  for(size_t count = 0; count < sizeof val/sizeof *val; count++)
+    printf("%02x", val[count]);
+  printf("\n");
+  
+  getSwarmsnodeUrl(pubKeyHexStr);
   
   printf("Start loop\n");
   session.loop((struct app *)&session);
