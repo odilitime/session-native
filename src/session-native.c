@@ -162,6 +162,10 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   goSnodes();
+  while(!snodeURLs.count) {
+    printf("Bootstrapping\n");
+    goSnodes();  
+  }
   printf("Bootstrapped[%zu]\n", (size_t)snodeURLs.count);
   
   FILE *fp = fopen("token.txt", "r");
