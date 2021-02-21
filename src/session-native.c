@@ -6,6 +6,8 @@
 #include <errno.h>   // errno
 ssize_t getline(char **linep, size_t *np, FILE *stream);
 
+#include <sodium.h>
+
 #include "include/opengem/network/http/http.h" // for makeUrlRequest
 #include "include/opengem/network/protocols.h"
 
@@ -13,6 +15,8 @@ ssize_t getline(char **linep, size_t *np, FILE *stream);
 #include "include/opengem/ui/app.h"
 
 #include "include/opengem/session/snode.h"
+//#include "include/opengem/session/session.h"
+#include "include/opengem/session/send.h"
 
 /*
 - text selection
@@ -156,6 +160,11 @@ void onkeyup(struct window *win, int key, int scancode, int mod, void *user) {
 int main(int argc, char *argv[]) {
   time_t t;
   srand((unsigned) time(&t));
+
+  if (sodium_init() == -1) {
+    return 1;
+  }
+  
   thread_spawn();
   if (app_init(&session)) {
     printf("compiled with no renders\n");
@@ -184,6 +193,12 @@ int main(int argc, char *argv[]) {
     //createLoginWindow(&tap);
   }
   
+  struct session_keypair skp;
+  //crypto_box_keypair(skp.pk, skp.sk);
+  crypto_sign_ed25519_keypair(skp.epk, skp.esk);
+  crypto_sign_ed25519_sk_to_curve25519(skp.sk, skp.esk);
+  crypto_sign_ed25519_pk_to_curve25519(skp.pk, skp.epk);
+  
   const char *pubKeyHexStr = "05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e";
   const char *pos = pubKeyHexStr;
   unsigned char val[32];
@@ -197,7 +212,8 @@ int main(int argc, char *argv[]) {
     printf("%02x", val[count]);
   printf("\n");
   
-  getSwarmsnodeUrl(pubKeyHexStr);
+  //getSwarmsnodeUrl(pubKeyHexStr);
+  send("05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e", &skp, "Hi", 0);
   
   printf("Start loop\n");
   session.loop((struct app *)&session);
