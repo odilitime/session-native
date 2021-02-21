@@ -171,6 +171,10 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   goSnodes();
+  while(!snodeURLs.count) {
+    printf("Bootstrapping\n");
+    goSnodes();  
+  }
   printf("Bootstrapped[%zu]\n", (size_t)snodeURLs.count);
   
   FILE *fp = fopen("token.txt", "r");
@@ -202,14 +206,16 @@ int main(int argc, char *argv[]) {
   const char *pubKeyHexStr = "05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e";
   const char *pos = pubKeyHexStr;
   unsigned char val[32];
-  for (size_t count = 0; count < sizeof val/sizeof *val; count++) {
+  size_t count;
+  for (count = 0; count < sizeof val/sizeof *val; count++) {
     sscanf(pos, "%2hhx", &val[count]);
     pos += 2;
   }
   
   printf("Pubkey: ");
-  for(size_t count = 0; count < sizeof val/sizeof *val; count++)
-    printf("%02x", val[count]);
+  size_t count2;
+  for(count2 = 0; count2 < sizeof val/sizeof *val; count2++)
+    printf("%02x", val[count2]);
   printf("\n");
   
   //getSwarmsnodeUrl(pubKeyHexStr);
@@ -243,7 +249,8 @@ getline(char **linep, size_t *np, FILE *stream)
   flockfile(stream);
   
   p = *linep;
-  for (int ch = 0; (ch = getc_unlocked(stream)) != EOF;) {
+  int ch;
+  for (ch = 0; (ch = getc_unlocked(stream)) != EOF;) {
     if (i > *np) {
       /* Grow *linep. */
       size_t m = *np * 2;
