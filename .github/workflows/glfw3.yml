@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: install dependencies
-      run: brew install glfw openssl mbedtls
+      run: brew install glfw openssl protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
@@ -82,7 +82,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: install dependencies
-      run: sudo apt-get install -y libfreetype6-dev libglfw3-dev
+      run: sudo apt-get install -y libfreetype6-dev libglfw3-dev protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
