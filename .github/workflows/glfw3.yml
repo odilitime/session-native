@@ -76,6 +76,11 @@ jobs:
           path: |
             ${{github.workspace}}/build/src/libglfw.3.dylib
             ${{github.workspace}}/build/src/libfreetype.6.dylib
+            ${{github.workspace}}/build/src/libprotobuf-c.1.dylib
+            ${{github.workspace}}/build/src/libsodium.23.dylib
+            ${{github.workspace}}/build/src/libprotobuf.25.dylib
+            ${{github.workspace}}/build/src/libssl.1.1.dylib
+            ${{github.workspace}}/build/src/libcrypto.1.1.dylib
             ${{github.workspace}}/build/src/libpng16.16.dylib
             ${{github.workspace}}/build/src/session-native
             ${{github.workspace}}/build/src/Resources
