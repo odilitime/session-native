@@ -34,7 +34,7 @@ it will look for a `Resources/` directory in the startup directory with CA bundl
 
 - [cmake 2.8.7+](https://cmake.org/)
 - git
-- a c compiler such as gcc or llvm (mainly dev'd on llvm)
+- a c compiler such as gcc (4.2.1+) or llvm (mainly dev'd on llvm)
 - [FreeType2](https://www.freetype.org/)
 - [GLFW](https://www.glfw.org/), [SDL1](https://www.libsdl.org/download-1.2.php) and/or [SDL2](https://www.libsdl.org/download-2.0.php)
    - GLFW is OpenGL only (and will eventually support Vulkan)
