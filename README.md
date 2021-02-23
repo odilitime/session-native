@@ -8,19 +8,25 @@ native implementation of Session in c without Electron using the opengem framewo
 ## how to run
 
 `./session-native`
-it will look for a `Resources/` directory with CA bundle and ttf font.
+it will look for a `Resources/` directory in the startup directory with CA bundle and ttf font.
 
 ## Milestones
 
-- snode communication (almost done)
-- Session protocol [en/de]cryption
+### Supports
+
+- snode communication
+- Session protocol encryption (sending)
+
+### Working On
+- Session protocol decryption (recieving)
 - initial UI
-- encrypted database
 - open group support
 - profile support
 - avatar / attachment support
-- closed group supprt
 - mutlithreading
+- encrypted database
+- onion routing support / lokinet support
+- closed group supprt
 
 ## Build Information
 
@@ -34,7 +40,7 @@ it will look for a `Resources/` directory with CA bundle and ttf font.
    - GLFW is OpenGL only (and will eventually support Vulkan)
    - SDL1 is software renderer (and will eventually also support OpenGL). This the only one that doesn't required a windowing system like X.
    - SDL2 is OpenGL with fallback to software render (will automatically select the best for your system)
-- libsodium
+- libsodium 1.0.18+
 - openssl (mbed support coming soon)
 - opengem (cmake will automatically download via git)
 
@@ -76,3 +82,8 @@ By default it prefers GLFW and SDL1 support. We prefer SDL1 over SDL2 because it
 USE GLFW and SDL2 `cmake -DPREFER_SDL2=ON .`
 USE SDL1 only `cmake -DIGNORE_GLFW=ON .`
 USE SDL2 only `cmake -DPREFER_SDL2=ON -DIGNORE_GLFW=ON .`
+
+# Support my work
+
+Oxen donations:
+LT2mP2DrmGD82gFnH16ty8ZtP6f33czpA6XgQdnuTVeT5bNGyy3vnaUezzKq1rEYyq3cvb2GBZ5LjCC6uqDyKnbvFki9aAX
