@@ -8,7 +8,7 @@ native implementation of Session in c without Electron using the opengem framewo
 ## how to run
 
 `./session-native`
-it will look for a `Resources/` directory in the startup directory with CA bundle and ttf font.
+it will look for a `Resources/` directory in the startup directory for CA bundle and ttf font.
 
 ## Milestones
 
