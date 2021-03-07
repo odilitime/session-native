@@ -61,7 +61,7 @@ jobs:
         install_name_tool -change /usr/local/opt/protobuf/lib/libprotobuf.26.dylib @executable_path/libprotobuf.26.dylib src/session-native
         install_name_tool -change /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib @executable_path/libssl.1.1.dylib src/session-native
         install_name_tool -change /usr/local/opt/openssl@1.1/lib/libcrypto.1.1.dylib @executable_path/libcrypto.1.1.dylib src/session-native
-        cp /usr/local/opt/glfw/lib/libglfw.3.dylib src
+        #cp /usr/local/opt/glfw/lib/libglfw.3.dylib src
         cp /usr/local/opt/freetype/lib/libfreetype.6.dylib src
         cp /usr/local/opt/protobuf-c/lib/libprotobuf-c.1.dylib src
         cp /usr/local/opt/libsodium/lib/libsodium.23.dylib src
