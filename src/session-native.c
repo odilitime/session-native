@@ -17,16 +17,28 @@ ssize_t getline(char **linep, size_t *np, FILE *stream);
 #include "include/opengem/session/snode.h"
 //#include "include/opengem/session/session.h"
 #include "include/opengem/session/send.h"
+#include "include/opengem/session/recv.h"
+
+#include "include/opengem/timer/scheduler.h"
+
+#define MIN(a,b) (((a)<(b))?(a):(b))
 
 /*
-- text selection
-- text copy/paste
-- text rendering speed (flashing issue, may have to do with flipping)
-- order of messages (bottom should be latest)
-- scroll past top
-- jump to bottom button
-(fix backend, so we can see if polling works)
+- initial UI
+- open group support
+- profile support
+- avatar / attachment support
+- mutlithreading
+- encrypted database
+- onion routing support / lokinet support
+- closed group support
 */
+
+/*
+LEAKS
+- openssl, reuse more...
+- openssl, clean up more...
+ */
 
 extern struct dynList snodeURLs;
 
@@ -157,6 +169,47 @@ void onkeyup(struct window *win, int key, int scancode, int mod, void *user) {
   */
 }
 
+void *recv_callback_iter(const struct dynListItem *item, void *user) {
+  // event system?
+  struct handleUnidentifiedMessageType_result *result = item->value;
+  struct session_recv_io *io = user;
+  char *from = malloc(67);
+  pkToString(result->source, from); // convert to hexstring
+  if (result->content->datamessage) {
+    printf("%s: %s\n", from, result->content->datamessage->body);
+  } else {
+    // non-data message
+  }
+  free(from);
+  return user;
+}
+
+struct recv_callback_data {
+  struct session_keypair *skp;
+  char lastHash[129]; // hexstring version
+};
+
+bool recv_callback(struct md_timer *timer, double now) {
+  struct recv_callback_data *recv_data = timer->user;
+  struct session_keypair *skp = recv_data->skp;
+  struct session_recv_io io;
+  io.kp = skp;
+  io.contents = 0;
+  io.lastHash = recv_data->lastHash;
+  session_recv(&io);
+  if (io.contents) {
+    printf("Found [%zu] messages\n", (size_t)io.contents->count);
+    dynList_iterator_const(io.contents, recv_callback_iter, &io);
+    free(io.contents);
+  }
+  // if changed...
+  if (io.lastHash != recv_data->lastHash) {
+    // pass lastHash to next call
+    strncpy(recv_data->lastHash, io.lastHash, MIN(strlen(io.lastHash), 129));
+  }
+  return true;
+}
+
 int main(int argc, char *argv[]) {
   time_t t;
   srand((unsigned) time(&t));
@@ -201,25 +254,23 @@ int main(int argc, char *argv[]) {
   //crypto_box_keypair(skp.pk, skp.sk);
   crypto_sign_ed25519_keypair(skp.epk, skp.esk);
   crypto_sign_ed25519_sk_to_curve25519(skp.sk, skp.esk);
-  crypto_sign_ed25519_pk_to_curve25519(skp.pk, skp.epk);
-  
-  const char *pubKeyHexStr = "05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e";
-  const char *pos = pubKeyHexStr;
-  unsigned char val[32];
-  size_t count;
-  for (count = 0; count < sizeof val/sizeof *val; count++) {
-    sscanf(pos, "%2hhx", &val[count]);
-    pos += 2;
+  int res = crypto_sign_ed25519_pk_to_curve25519(skp.pk, skp.epk);
+  // res is usually zero
+  if (res) {
+    printf("Signing ED result[%d]\n", res);
+    return 1;
   }
-  
-  printf("Pubkey: ");
-  size_t count2;
-  for(count2 = 0; count2 < sizeof val/sizeof *val; count2++)
-    printf("%02x", val[count2]);
-  printf("\n");
-  
+  skp.pkStr = malloc(67);
+  pkToString(skp.pk, skp.pkStr); // convert to hexstring
+  printf("Session started for [%s]\n", skp.pkStr);
   //getSwarmsnodeUrl(pubKeyHexStr);
-  send("05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e", &skp, "Hi", 0);
+  //send("05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e", &skp, "Hi", 0);
+  
+  struct recv_callback_data recv_data;
+  strcpy(recv_data.lastHash, "undefined");
+  recv_data.skp = &skp;
+  struct md_timer *reciever = setInterval(recv_callback, 10000);
+  reciever->user = &recv_data;
   
   printf("Start loop\n");
   session.loop((struct app *)&session);
