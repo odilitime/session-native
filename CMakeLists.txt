@@ -57,6 +57,18 @@ CPM_AddModule("opengem_ui"
   SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_ui.git"
 )
 
+# ++ MODULE: opengem_timer
+CPM_EnsureRepoIsCurrent(
+  TARGET_DIR ${CPM_MODULE_CACHING_DIR}/opengem/timer
+  GIT_REPOSITORY https://gitgud.io/Sapphire/opengem/opengem_timer.git
+  USE_CACHING 1
+)
+CPM_AddModule("opengem_timer"
+  SOURCE_DIR ${CPM_MODULE_CACHING_DIR}/opengem/timer
+  USE_EXISTING_VER true
+  SOURCE_GHOST_GIT_REPO "https://gitgud.io/Sapphire/opengem/opengem_timer.git"
+)
+
 CPM_Finish()
 
 macro(use_c99)
