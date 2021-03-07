@@ -16,13 +16,8 @@ jobs:
 
     - name: install dependencies
       run: |
-        TAP="odilitime/glfw"     # <org>/<repo>, for example "my-org/homebrew-old"
-        MODULE="glfw"  # name of module you want to install, e.g. "hugo"
-        VERS="3.2.2"    # version of $MODULE you want to install, e.g., "0.80.0"
-        brew tap-new $TAP
-        brew extract --version $VERS $MODULE $TAP
-        brew install $TAP/$MODULE@$VERS
-        brew install openssl protobuf-c libsodium
+        brew tap odilitime/homebrew-repo
+        brew install glfw@3.3.2 openssl protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
