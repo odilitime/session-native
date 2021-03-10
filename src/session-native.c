@@ -57,8 +57,8 @@ void onscroll(struct window *win, int16_t x, int16_t y, void *user) {
   
   // reverse find which window this is... in app->windwos
   //struct llLayerInstance *lInst = (struct llLayerInstance *)dynList_getValue(&win->ui->layers, 0);
-  struct app_window *firstWindow = (struct app_window *)session.windows.head->value;
-  struct llLayerInstance *lInst = (struct llLayerInstance *)dynList_getValue(&firstWindow->rootComponent->layers, 0);
+  struct app_window *firstWindow = (struct app_window *)session.activeAppWindow;
+  struct llLayerInstance *lInst = (struct llLayerInstance *)dynList_getValue(&firstWindow->rootComponent.layers, 0);
   //struct dynListItem *item = dynList_getItem(&win->ui->layers, 0);
   //struct llLayerInstance *lInst = (struct llLayerInstance *)item->value;
   if (!lInst) {
@@ -88,8 +88,8 @@ struct component *focusComp = 0;
 void onmousemove(struct window *win, int16_t x, int16_t y, void *user) {
   // scan top layer first
   //struct llLayerInstance *uiLayer = (struct llLayerInstance *)dynList_getValue(&win->ui->layers, 1);
-  struct app_window *firstWindow = (struct app_window *)session.windows.head->value;
-  struct llLayerInstance *uiLayer = (struct llLayerInstance *)dynList_getValue(&firstWindow->rootComponent->layers, 1);
+  struct app_window *firstWindow = (struct app_window *)session.activeAppWindow;
+  struct llLayerInstance *uiLayer = (struct llLayerInstance *)dynList_getValue(&firstWindow->rootComponent.layers, 1);
   
   struct pick_request request;
   request.x = (int)x;
@@ -104,7 +104,7 @@ void onmousemove(struct window *win, int16_t x, int16_t y, void *user) {
   } else {
     // not on top layer, check bottom layer
     //struct llLayerInstance *contentLayer = (struct llLayerInstance *)dynList_getValue(&win->ui->layers, 0);
-    struct llLayerInstance *contentLayer = (struct llLayerInstance *)dynList_getValue(&firstWindow->rootComponent->layers, 0);
+    struct llLayerInstance *contentLayer = (struct llLayerInstance *)dynList_getValue(&firstWindow->rootComponent.layers, 0);
     
     request.result = contentLayer->rootComponent;
     hoverComp = component_pick(&request);
