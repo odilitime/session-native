@@ -1,0 +1,20 @@
+<body color=000000FF bgcolor=FFFFFFFF>
+<!-- layers are used to control what's drawn on top of what -->
+<layer> <!-- background layer -->
+  <img name="mascot" src="anime.pnm" width=512 height=512 left=60% bottom=0>
+</layer>
+<layer>
+<!--
+>what beyond the colors of the tabs would you want to change?
+- The shape of the outline
++ how close they stand together
+- Something I've really taken a liking to in firefox is how you can disable/enable sound from tabs with the icon in it's title. So perhaps a way to customize what kind of buttons (along with their functions) a tab can have would be nice too. Of course, that's not exactly something that should be prioritized.
+-->
+  <font top=16 height=16 right=0 width=420 src="DejaVuSerif.ttf" family="san-serif" size=12 color=000000FF bgcolor=FF0000FF id="identity">ID</font>
+  <tabSelector color=000000FF hover=888888FF left=0 width=32 top=0 bottom=0 id="apps" vertical></tabSelector>
+  <button left=32 width=32 top=0 height=16>Create Conversation</button>
+  <tabSelector color=000000FF hover=888888FF left=32 width=32 top=16 bottom=0 id="subapps" vertical></tabSelector>
+  <input color=000000FF bgcolor=FFFFFFFF left=192 right=32 bottom=16 height=24 onClick="send" fontSize=12 id="sendbar">
+  <button right=0 width=32 bottom=16>Send<button>
+</layer>
+</body>
