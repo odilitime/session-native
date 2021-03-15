@@ -29,7 +29,7 @@ jobs:
         port version
         # ls -l $(which cmake)
         # cmake --version
-        sudo port -v install glfw openssl protobuf-c libsodium
+        sudo port install glfw openssl protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
@@ -67,7 +67,7 @@ jobs:
       shell: bash
       run: |
         install_name_tool -change /usr/local/opt/glfw@3.3.2/lib/libglfw.3.dylib @executable_path/libglfw.3.dylib src/session-native
-        install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib src/session-native
+        #install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib src/session-native
         install_name_tool -change /usr/local/opt/protobuf-c/lib/libprotobuf-c.1.dylib @executable_path/libprotobuf-c.1.dylib src/session-native
         install_name_tool -change /usr/local/opt/libsodium/lib/libsodium.23.dylib @executable_path/libsodium.23.dylib src/session-native
         install_name_tool -change /usr/local/opt/protobuf/lib/libprotobuf.26.dylib @executable_path/libprotobuf.26.dylib src/session-native
