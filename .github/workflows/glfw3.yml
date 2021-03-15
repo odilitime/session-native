@@ -14,10 +14,20 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: install dependencies
+    - name: Set Xcode to 10.3
       run: |
-        brew tap odilitime/homebrew-repo
-        brew install glfw@3.3.2 openssl protobuf-c libsodium
+          sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
+          xcodebuild -version
+
+    - name: MacPorts
+      uses: keepitsimpletech/actions/setup-macports@releases/v1
+
+    - name: Install first Macport double-conversion using Cmake
+      run: |
+          port version
+          ls -l $(which cmake)
+          cmake --version
+          sudo port -vs install glfw openssl protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
