@@ -16,10 +16,14 @@ it will look for a `Resources/` directory in the startup directory for CA bundle
 
 - snode communication
 - Session protocol encryption (sending)
-
-### Working On
 - Session protocol decryption (recieving)
 - initial UI
+
+### Working On
+- Finishing MVP UI
+- non-blocking net-io
+- identity management
+- UI design
 - open group support
 - profile support
 - avatar / attachment support
