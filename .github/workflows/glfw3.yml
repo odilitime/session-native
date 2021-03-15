@@ -20,8 +20,10 @@ jobs:
           xcodebuild -version
 
     - name: MacPorts
-      uses: keepitsimpletech/actions/setup-macports@HEAD
-
+      run: |
+        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+        source ./macports-ci install
+        
     - name: Install first Macport double-conversion using Cmake
       run: |
           port version
