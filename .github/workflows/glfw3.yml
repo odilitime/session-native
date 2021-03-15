@@ -66,7 +66,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       run: |
-        install_name_tool -change /opt/local/lib/libglfw.3.dylib @executable_path/libglfw.3.dylib src/session-native
+        install_name_tool -change /opt/local/lib/libglfw.3.dylib @executable_path/libglfw.dylib src/session-native
         install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib src/session-native
         install_name_tool -change /opt/local/lib/libprotobuf-c.1.dylib @executable_path/libprotobuf-c.1.dylib src/session-native
         #install_name_tool -change /usr/local/opt/libsodium/lib/libsodium.23.dylib @executable_path/libsodium.23.dylib src/session-native
@@ -88,11 +88,11 @@ jobs:
       with:
           name: session-native-macos-glfw
           path: |
-            ${{github.workspace}}/build/src/libglfw.3.dylib
+            ${{github.workspace}}/build/src/libglfw.dylib
             ${{github.workspace}}/build/src/libfreetype.6.dylib
             ${{github.workspace}}/build/src/libprotobuf-c.1.dylib
             ${{github.workspace}}/build/src/libsodium.23.dylib
-            ${{github.workspace}}/build/src/libprotobuf.26.dylib
+            ${{github.workspace}}/build/src/libprotobuf.25.dylib
             ${{github.workspace}}/build/src/libssl.1.1.dylib
             ${{github.workspace}}/build/src/libcrypto.1.1.dylib
             ${{github.workspace}}/build/src/libpng16.16.dylib
