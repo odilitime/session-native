@@ -24,12 +24,12 @@ jobs:
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
         source ./macports-ci install
         
-    - name: Install first Macport double-conversion using Cmake
+    - name: Install Dependencies
       run: |
-          port version
-          ls -l $(which cmake)
-          cmake --version
-          sudo port -vs install glfw openssl protobuf-c libsodium
+        port version
+        # ls -l $(which cmake)
+        # cmake --version
+        port -v install glfw openssl protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
