@@ -29,7 +29,7 @@ jobs:
         port version
         # ls -l $(which cmake)
         # cmake --version
-        port -v install glfw openssl protobuf-c libsodium
+        sudo port -v install glfw openssl protobuf-c libsodium
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
