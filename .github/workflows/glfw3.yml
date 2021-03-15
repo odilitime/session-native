@@ -74,7 +74,7 @@ jobs:
         install_name_tool -change /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib @executable_path/libssl.1.1.dylib src/session-native
         install_name_tool -change /usr/local/opt/openssl@1.1/lib/libcrypto.1.1.dylib @executable_path/libcrypto.1.1.dylib src/session-native
         cp /opt/local/lib/libglfw.dylib src
-        cp /opt/local/lib/libfreetype.6.dylib src
+        #cp /opt/local/lib/libfreetype.6.dylib src
         cp /opt/local/lib/libprotobuf-c.1.dylib src
         cp /opt/local/lib/libsodium.23.dylib src
         cp /opt/local/lib/libprotobuf.*.dylib src
@@ -89,7 +89,7 @@ jobs:
           name: session-native-macos-glfw
           path: |
             ${{github.workspace}}/build/src/libglfw.3.dylib
-            ${{github.workspace}}/build/src/libfreetype.6.dylib
+            #${{github.workspace}}/build/src/libfreetype.6.dylib
             ${{github.workspace}}/build/src/libprotobuf-c.1.dylib
             ${{github.workspace}}/build/src/libsodium.23.dylib
             ${{github.workspace}}/build/src/libprotobuf.26.dylib
