@@ -89,7 +89,7 @@ jobs:
           name: session-native-macos-glfw
           path: |
             ${{github.workspace}}/build/src/libglfw.3.dylib
-            #${{github.workspace}}/build/src/libfreetype.6.dylib
+            ${{github.workspace}}/build/src/libfreetype.6.dylib
             ${{github.workspace}}/build/src/libprotobuf-c.1.dylib
             ${{github.workspace}}/build/src/libsodium.23.dylib
             ${{github.workspace}}/build/src/libprotobuf.26.dylib
