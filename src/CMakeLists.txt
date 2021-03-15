@@ -24,15 +24,19 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 endif()
 
 # for xcode
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../rsrc/07558_CenturyGothic.ttf
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/Resources)
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../rsrc/ca-bundle.crt
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/HansKendrick-Regular.ttf
+  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/Resources)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/ca-bundle.crt
+  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/Resources)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/session-native.ntrml
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/Resources)
 
 # for cli
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../rsrc/07558_CenturyGothic.ttf
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/HansKendrick-Regular.ttf
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Resources)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../rsrc/ca-bundle.crt
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/ca-bundle.crt
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Resources)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/session-native.ntrml
+DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Resources)
