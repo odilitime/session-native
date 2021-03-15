@@ -10,11 +10,19 @@
 + how close they stand together
 - Something I've really taken a liking to in firefox is how you can disable/enable sound from tabs with the icon in it's title. So perhaps a way to customize what kind of buttons (along with their functions) a tab can have would be nice too. Of course, that's not exactly something that should be prioritized.
 -->
-  <font top=16 height=16 right=0 width=420 src="DejaVuSerif.ttf" family="san-serif" size=12 color=000000FF bgcolor=FF0000FF id="identity">ID</font>
-  <tabSelector color=000000FF hover=888888FF left=0 width=32 top=0 bottom=0 id="apps" vertical></tabSelector>
-  <button left=32 width=32 top=0 height=16>Create Conversation</button>
-  <tabSelector color=000000FF hover=888888FF left=32 width=32 top=16 bottom=0 id="subapps" vertical></tabSelector>
-  <input color=000000FF bgcolor=FFFFFFFF left=192 right=32 bottom=16 height=24 onClick="send" fontSize=12 id="sendbar">
-  <button right=0 width=32 bottom=16>Send<button>
+  <tabSelector color=000000FF hover=888888FF left=0 width=60 top=0 bottom=0 id="apps" vertical></tabSelector>
+  <button left=60 width=120 top=0 height=16 color=888888FF textcolor=FFFFFFFF onClick="newConvo">Create Conversation</button>
+  <tabSelector color=000000FF hover=888888FF left=60 width=120 top=16 bottom=0 id="conversations" vertical></tabSelector>
+  <font top=16 height=16 right=0 width=420 src="HansKendrick-Regular.ttf" family="san-serif" size=12 color=FFFFFFFF bgcolor=FF0000FF id="identity" onClick="copy">Generating ID... please wait...</font>
+  <tabSelector color=000000FF hover=888888FF left=180 right=0 top=32 bottom=40 id="messages" vertical></tabSelector>
+  <input color=000000FF bgcolor=FFFFFFFF left=192 right=32 bottom=16 height=24 fontSize=12 id="sendbar">
+  <button id="sendBut" right=0 width=32 bottom=16 height=24 color=888888FF textcolor=FFFFFFFF onClick="send">Send</button>
+  <font id="statusBar" bottom=0 height=16 left=0 width=192 src="HansKendrick-Regular.ttf" family="san-serif" size=12 color=FFFFFFFF bgcolor=FF0000FF></font>
+</layer>
+<layer id="newConvo" hidden>
+  <font left=32 width=420 top=16 height=16 src="HansKendrick-Regular.ttf" family="san-serif" size=12 color=FFFFFFFF bgcolor=FF0000FF>Enter their SessionID here:</font>
+  <input left=32 width=420 top=32 height=16 color=000000FF bgcolor=FFFFFFFF fontSize=12 id="toIdentity">
+  <button id="createBut" left=32 width=240 top=48 height=16 color=888888FF textcolor=FFFFFFFF onClick="createConvo">Create</button>
+  <button left=272 width=240 top=48 height=16 color=888888FF textcolor=FFFFFFFF onClick="cancelConvo">Cancel</button>
 </layer>
 </body>
