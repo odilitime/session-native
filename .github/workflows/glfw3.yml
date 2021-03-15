@@ -20,7 +20,7 @@ jobs:
           xcodebuild -version
 
     - name: MacPorts
-      uses: keepitsimpletech/actions/setup-macports@releases/v1
+      uses: keepitsimpletech/actions/setup-macports@HEAD
 
     - name: Install first Macport double-conversion using Cmake
       run: |
