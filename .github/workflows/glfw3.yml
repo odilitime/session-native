@@ -35,8 +35,14 @@ jobs:
 
     - name: Install MacPorts
       run: |
-        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
-        source ./macports-ci install
+        #curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+        #source ./macports-ci install
+        curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.6.4.tar.bz2
+        tar xf MacPorts-2.6.4.tar.bz2
+        cd MacPorts-2.6.4/
+        ./configure
+        make
+        sudo make install
         #sudo chmod 755 /opt/local/etc/macports/macports.conf 
         #ls -la /opt/local/etc/macports/
         #tail /opt/local/etc/macports/macports.conf
