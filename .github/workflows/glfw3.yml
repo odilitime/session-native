@@ -18,18 +18,34 @@ jobs:
       run: |
           sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
           xcodebuild -version
+          ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
 
     - name: Install MacPorts
       run: |
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
         source ./macports-ci install
+        echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf 
+        echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf 
+        echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf 
+        port clean --all all
         
     - name: Install Dependencies
       run: |
         port version
         # ls -l $(which cmake)
         # cmake --version
-        sudo port install glfw openssl protobuf-c libsodium
+        sudo port -s -N -v install glfw openssl protobuf-c libsodium
+        for f in /opt/local/bin/*; do \
+            if otool -l $f \
+               | grep -B1 -A3 LC_VERSION_MIN_MACOSX \
+               | grep -q 10.11;
+            then \
+                echo "success: $f"; \
+            else \
+                echo "* error: $f"; \
+            fi;
+        done
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
