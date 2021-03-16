@@ -14,17 +14,29 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set Xcode to 10.3
+    - name: Set Xcode to 7.3.1
       run: |
-          sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
+          sudo xcode-select -s /Applications/Xcode_7.3.1.app/Contents/Developer
           xcodebuild -version
           ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-          ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          ls -la /Applications/Xcode_7.3.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+
+    - name: Cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-macports
+      with:
+        path: ~/.macports-ci-ccache
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+        restore-keys: |
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
 
     - name: Install MacPorts
       run: |
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
         source ./macports-ci install
+        ls -la /opt/local/etc/macports/
         sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf 
         sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf 
         sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf 
