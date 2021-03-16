@@ -16,6 +16,7 @@ jobs:
 
     - name: Set Xcode to 7.3.1
       run: |
+          ls -la /Applications/Xcode*
           sudo xcode-select -s /Applications/Xcode_7.3.1.app/Contents/Developer
           xcodebuild -version
           ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
