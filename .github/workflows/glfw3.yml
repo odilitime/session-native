@@ -18,6 +18,8 @@ jobs:
       run: |
           #ls -la /Applications/Xcode*
           sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
+          xcode-select --install
+          sudo xcodebuild -license accept
           #xcodebuild -version
           #ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
           #ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
