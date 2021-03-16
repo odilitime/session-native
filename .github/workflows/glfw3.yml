@@ -39,9 +39,11 @@ jobs:
         source ./macports-ci install
         sudo chmod 755 /opt/local/etc/macports/macports.conf 
         ls -la /opt/local/etc/macports/
-        sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf 
-        sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf 
-        sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf 
+        tail /opt/local/etc/macports/macports.conf
+        sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf
+        sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf
+        sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf
+        tail /opt/local/etc/macports/macports.conf
         port clean --all all
         
     - name: Install Dependencies
