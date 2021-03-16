@@ -25,9 +25,9 @@ jobs:
       run: |
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
         source ./macports-ci install
-        echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf 
-        echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf 
-        echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf 
+        sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf 
+        sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf 
+        sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf 
         port clean --all all
         
     - name: Install Dependencies
