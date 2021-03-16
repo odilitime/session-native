@@ -1,0 +1,52 @@
+language: c
+osx_image: xcode7.3
+addons:
+  homebrew:
+    packages:
+    - glfw
+    - libsodium
+    - openssl
+    - protobuf-c
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode7.3
+      env:
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+
+    - os: osx
+      osx_image: xcode7.3
+      env:
+        - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
+
+    - os: osx
+      osx_image: xcode7.3
+      env:
+        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
+
+    - os: osx
+      osx_image: xcode7.3
+      env:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
+
+    - os: osx
+      osx_image: xcode12.2
+
+    - os: osx
+      osx_image: xcode11.3
+
+    - os: osx
+      osx_image: xcode10.1
+    
+    - os: osx
+      osx_image: xcode9.2
+
+    - os: osx
+      osx_image: xcode8
+
+    - os: osx
+      osx_image: xcode7.3
+
+before_install:
+    - eval "${MATRIX_EVAL}"
