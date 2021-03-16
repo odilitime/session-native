@@ -37,6 +37,7 @@ jobs:
       run: |
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
         source ./macports-ci install
+        sudo chmod 755 /opt/local/etc/macports/macports.conf 
         ls -la /opt/local/etc/macports/
         sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf 
         sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf 
