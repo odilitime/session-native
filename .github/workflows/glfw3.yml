@@ -81,9 +81,8 @@ jobs:
         cp /opt/local/lib/libssl.1.1.dylib src
         cp /opt/local/lib/libcrypto.1.1.dylib src
         chmod 755 src/libfreetype.6.dylib
-        ls -la src
         install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib @executable_path/libpng16.16.dylib src/libfreetype.6.dylib
-        cp /opt/local/lib/libpng16.16.dylib src
+        cp /usr/local/opt/libpng/lib/libpng16.16.dylib src
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
