@@ -16,9 +16,17 @@ jobs:
     - name: install dependencies
       run: sudo apt-get install -y libfreetype6-dev libglfw3-dev libprotoc-dev libprotobuf-c-dev libsodium-dev mingw-w64
 
+    - name: build deps for windows
+      run: |
+        git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
+        cd protobuf-c
+        ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686
+        make
+        sudo make install
+
     - name: Checkout git submodules
       run: git submodule update --init --recursive
-
+      
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
@@ -62,16 +70,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set Xcode to 10.3
-      run: |
-          #ls -la /Applications/Xcode*
-          #sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
-          #xcode-select --install
-          #sudo xcodebuild -license accept
-          xcodebuild -version
-          #ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-          #ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-
     - name: Cache
       uses: actions/cache@v2
       env:
@@ -101,8 +99,19 @@ jobs:
         #sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf
         #tail /opt/local/etc/macports/macports.conf
         sudo /opt/local/bin/port -v selfupdate
-        sudo /opt/local/bin/port clean --all all
-        
+        #sudo /opt/local/bin/port clean --all all
+
+    - name: Set Xcode to 10.3
+      run: |
+          #ls -la /Applications/Xcode*
+          sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
+          #xcode-select --install
+          sudo xcodebuild -license accept
+          xcodebuild -sdk -version
+          xcodebuild -version -sdk macosx10.7 Path
+          #ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          
     - name: Install Dependencies
       run: |
         /opt/local/bin/port version
