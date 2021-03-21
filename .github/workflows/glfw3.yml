@@ -8,13 +8,13 @@ env:
 
 jobs:
   windows-build:
-    runs-on: alpine-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
     - name: install dependencies
-      run: sudo apk add freetype-dev glfw3-dev protobuf-c-dev libsodium-dev mingw-w64-gcc
+      run: sudo apt-get install -y libfreetype6-dev libglfw3-dev libprotoc-dev libprotobuf-c-dev libsodium-dev mingw32
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
@@ -100,14 +100,14 @@ jobs:
         #sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf
         #sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf
         #tail /opt/local/etc/macports/macports.conf
-        port clean --all all
+        sudo /opt/local/bin/port clean --all all
         
     - name: Install Dependencies
       run: |
-        port version
+        /opt/local/bin/port version
         # ls -l $(which cmake)
         # cmake --version
-        sudo port -s -N -v install glfw openssl protobuf-c libsodium
+        sudo /opt/local/bin/port -s -N -v install glfw openssl protobuf-c libsodium
         for f in /opt/local/bin/*; do \
             if otool -l $f \
                | grep -B1 -A3 LC_VERSION_MIN_MACOSX \
