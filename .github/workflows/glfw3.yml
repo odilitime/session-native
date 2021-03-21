@@ -18,6 +18,13 @@ jobs:
 
     - name: build deps for windows
       run: |
+        git clone -bv3.15.6 https://github.com/protocolbuffers/protobuf
+        cd protobuf
+        ./autogen.sh
+        ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686
+        make
+        sudo make install
+        cd ..
         git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
         cd protobuf-c
         ./autogen.sh
@@ -92,26 +99,27 @@ jobs:
         ./configure
         make
         sudo make install
-        #sudo chmod 755 /opt/local/etc/macports/macports.conf 
-        #ls -la /opt/local/etc/macports/
-        #tail /opt/local/etc/macports/macports.conf
-        #sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf
-        #sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf
-        #sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf
-        #tail /opt/local/etc/macports/macports.conf
+        sudo chmod 755 /opt/local/etc/macports/macports.conf 
+        ls -la /opt/local/etc/macports/
+        tail /opt/local/etc/macports/macports.conf
+        sudo echo "universal_target 10.9" >> /opt/local/etc/macports/macports.conf
+        sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf
+        sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf
+        tail /opt/local/etc/macports/macports.conf
         sudo /opt/local/bin/port -v selfupdate
         #sudo /opt/local/bin/port clean --all all
 
     - name: Set Xcode to 10.3
       run: |
           #ls -la /Applications/Xcode*
-          sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
+          #sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
           #xcode-select --install
-          sudo xcodebuild -license accept
-          xcodebuild -sdk -version
+          #sudo xcodebuild -license accept
+          xcodebuild -version
+          #xcodebuild -sdk -version
           #xcodebuild -version -sdk macosx10.7 Path
           #ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-          ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          #ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
           
     - name: Install Dependencies
       run: |
