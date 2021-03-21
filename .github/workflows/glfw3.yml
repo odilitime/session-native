@@ -20,6 +20,7 @@ jobs:
       run: |
         git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
         cd protobuf-c
+        ./autogen.sh
         ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686
         make
         sudo make install
@@ -108,7 +109,7 @@ jobs:
           #xcode-select --install
           sudo xcodebuild -license accept
           xcodebuild -sdk -version
-          xcodebuild -version -sdk macosx10.7 Path
+          #xcodebuild -version -sdk macosx10.7 Path
           #ls -la /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
           ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
           
