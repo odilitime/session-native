@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: install dependencies
-      run: sudo apt-get install -y libfreetype6-dev libglfw3-dev libprotoc-dev libprotobuf-c-dev libsodium-dev mingw32
+      run: sudo apt-get install -y libfreetype6-dev libglfw3-dev libprotoc-dev libprotobuf-c-dev libsodium-dev mingw-w64
 
     - name: Checkout git submodules
       run: git submodule update --init --recursive
@@ -100,6 +100,7 @@ jobs:
         #sudo echo "macosx_deployment_target 10.9" >> /opt/local/etc/macports/macports.conf
         #sudo echo "macosx_sdk_version	10.9" >> /opt/local/etc/macports/macports.conf
         #tail /opt/local/etc/macports/macports.conf
+        sudo /opt/local/bin/port -v selfupdate
         sudo /opt/local/bin/port clean --all all
         
     - name: Install Dependencies
