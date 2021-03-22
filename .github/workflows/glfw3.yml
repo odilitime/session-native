@@ -22,14 +22,14 @@ jobs:
         cd protobuf
         ./autogen.sh
         ./configure --help
-        ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32
+        CC=i686-w64-mingw32-gcc-posix CXX=i686-w64-mingw32-g++-posix ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32
         make -j$(nproc)
         sudo make install
         cd ..
         git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
         cd protobuf-c
         ./autogen.sh
-        ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32
+        CC=i686-w64-mingw32-gcc-posix CXX=i686-w64-mingw32-g++-posix ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32
         make -j$(nproc)
         sudo make install
 
@@ -92,21 +92,21 @@ jobs:
 
     - name: Install MacPorts
       run: |
-        #curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
-        #source ./macports-ci install
-        curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.6.4.tar.bz2
-        tar xf MacPorts-2.6.4.tar.bz2
-        cd MacPorts-2.6.4/
-        ./configure
-        make
-        sudo make install
+        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+        source ./macports-ci install
+        #curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.6.4.tar.bz2
+        #tar xf MacPorts-2.6.4.tar.bz2
+        #cd MacPorts-2.6.4/
+        #./configure
+        #make
+        #sudo make install
         sudo chmod 755 /opt/local/etc/macports/macports.conf 
-        ls -la /opt/local/etc/macports/
-        tail /opt/local/etc/macports/macports.conf
+        #ls -la /opt/local/etc/macports/
+        #tail /opt/local/etc/macports/macports.conf
         sudo bash -c "echo \"universal_target 10.9\" >> /opt/local/etc/macports/macports.conf"
         sudo bash -c "echo \"macosx_deployment_target 10.9\" >> /opt/local/etc/macports/macports.conf"
         sudo bash -c "echo \"macosx_sdk_version	10.9\" >> /opt/local/etc/macports/macports.conf"
-        tail /opt/local/etc/macports/macports.conf
+        #tail /opt/local/etc/macports/macports.conf
         sudo /opt/local/bin/port -v selfupdate
         #sudo /opt/local/bin/port clean --all all
 
