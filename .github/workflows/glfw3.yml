@@ -26,6 +26,9 @@ jobs:
         make -j$(nproc)
         sudo make install
         cd ..
+        protoc --version
+        whereis protoc
+        pkgconfig --variable=exec_prefix protobuf
         git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
         cd protobuf-c
         ./autogen.sh
