@@ -18,14 +18,14 @@ jobs:
 
     - name: build deps for windows
       run: |
-        #git clone -bv3.15.6 https://github.com/protocolbuffers/protobuf
-        #cd protobuf
-        #./autogen.sh
-        #./configure --help
-        #CC=i686-w64-mingw32-gcc-posix CXX=i686-w64-mingw32-g++-posix ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32
-        #make -j$(nproc)
-        #sudo make install
-        #cd ..
+        git clone -bv3.15.6 https://github.com/protocolbuffers/protobuf
+        cd protobuf
+        ./autogen.sh
+        ./configure --help
+        CC=i686-w64-mingw32-gcc-posix CXX=i686-w64-mingw32-g++-posix ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32
+        make -j$(nproc)
+        sudo make install
+        cd ..
         git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
         cd protobuf-c
         ./autogen.sh
@@ -128,8 +128,8 @@ jobs:
         /opt/local/bin/port version
         # ls -l $(which cmake)
         # cmake --version
-        #sudo /opt/local/bin/port -s -N -v install glfw openssl protobuf-c libsodium
-        sudo /opt/local/bin/port -N -v install glfw openssl protobuf-c libsodium
+        sudo /opt/local/bin/port -s -N -v install glfw openssl protobuf-c libsodium
+        #sudo /opt/local/bin/port -N -v install glfw openssl protobuf-c libsodium
         for f in /opt/local/bin/*; do \
             if otool -l $f \
                | grep -B1 -A3 LC_VERSION_MIN_MACOSX \
