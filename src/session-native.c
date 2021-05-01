@@ -62,18 +62,43 @@ struct conversation {
   char *pubkeyStr;
   struct tab *tab;
   uint16_t badgeCount;
+  struct dynList messages;
+};
+
+struct message {
+  char *fromStr;
+  char *body;
 };
 
 #define HEAP_ALLOCATE(TYPE,VAR) TYPE *VAR = malloc(sizeof(TYPE));
 
+void *loadMessage_iterator(const struct dynListItem *item, void *user) {
+  // render message struct messagesTab
+  struct message *msg = item->value;
+  if (!msg) return user;
+  tab_add(messagesTab, msg->body, session.activeAppWindow->win);
+  return user;
+}
+
 void selectConversation(struct tab *tab) {
+  printf("selectConversation [%p=>%p]\n", convoTab->selectedTab, tab);
+  // we can't abort here because we need drive the first select
+  // and since tab_add selects it, we are already selected.
+  //if (convoTab->selectedTab == tab) return;
   // unselect old one
   //convoTab->selectedTabId = convoId;
-  convoTab->selectedTab = tab;
+  tabbed_component_selectTab((struct tabbed_component *)messagesTab, tab);
+  //convoTab->selectedTab = tab;
+
   // find messages tabs
   struct llLayerInstance *ll = messagesTab->super.layers.head->value;
   // erase them
   dynList_reset(&ll->rootComponent->children);
+  
+  // load messages
+  struct conversation *tabConvo = tab->user;
+  dynList_iterator_const(&tabConvo->messages, loadMessage_iterator, 1);
+  
   ll->rootComponent->renderDirty = true;
   if (tab) {
     printf("selectConversation - Enabling input\n");
@@ -85,7 +110,7 @@ void selectConversation(struct tab *tab) {
   convoTab->super.super.renderDirty = true;
 }
 
-void *find_conversation_iterator(const struct dynListItem *item, void *user) {
+void *find_conversationFrom_iterator(const struct dynListItem *item, void *user) {
   struct conversation *convo = item->value;
   if (strcmp(user, convo->pubkeyStr) == 0) {
     return convo;
@@ -105,14 +130,19 @@ void *recv_callback_iter(const struct dynListItem *item, void *user) {
     if (strcmp(from, current_skp.pkStr) == 0) {
       useFrom = "Note to self";
     }
+    if (strcmp(from, "05c87493c457b29a4137c091b59998cb5ffd7fd727d19ba0046deff47abb7adf35") == 0) {
+      useFrom = "Bot directory";
+    }
     // we do have a conversation for this from?
-    void *searchRes = dynList_iterator_const(&conversations, find_conversation_iterator, useFrom);
+    void *searchRes = dynList_iterator_const(&conversations, find_conversationFrom_iterator, useFrom);
     if (searchRes == from) {
       // if not create it
       HEAP_ALLOCATE(struct conversation, conf)
+      dynList_init(&conf->messages, sizeof(char *), "Convo messages");
       conf->pubkeyStr = strdup(from);
       conf->badgeCount = 0;
       conf->tab = tab_add(convoTab, conf->pubkeyStr, session.activeAppWindow->win);
+      conf->tab->user = conf;
       selectConversation(conf->tab);
       dynList_push(&conversations, conf);
       searchRes = conf;
@@ -126,15 +156,25 @@ void *recv_callback_iter(const struct dynListItem *item, void *user) {
     } else {
       // update badge
       char *label = malloc(strlen(convo->tab->titleBox.text) + 8);
+      // how does this just not continue to append shit
+      // also this breaks sending to that person
       sprintf(label, "%s (%d)", convo->tab->titleBox.text, convo->badgeCount);
       //char *oldLabel = convo->tab->titleBox.text;
-      free((char *)convo->tab->titleBox.text);
+      if (convo->tab->titleBox.text != convo->pubkeyStr) {
+        // can't free it because that string is also used in convo->pubkeyStr
+        free((char *)convo->tab->titleBox.text);
+      }
       convo->tab->titleBox.text = label;
       convo->badgeCount++;
       convoTab->super.super.renderDirty = true;
     }
+    HEAP_ALLOCATE(struct message, msg)
+    msg->body = result->content->datamessage->body;
+    msg->fromStr = from;
+    dynList_push(&convo->messages, msg);
   } else {
     // non-data message
+    printf("Non-data message typing[%p] receipt[%p]\n", result->content->typingmessage, result->content->receiptmessage);
   }
   free(from);
   return user;
@@ -151,27 +191,36 @@ void updateStatusBar(char *status) {
   // we can't make setText auto draw because it doesn't know we're done making change
 }
 
+void session_recv_cb(struct session_recv_io *io) {
+  //printf("session_native::session_recv_cb - start\n");
+  updateStatusBar("Updating UI...");
+  if (io->contents) {
+    printf("Found [%zu] messages\n", (size_t)io->contents->count);
+    dynList_iterator_const(io->contents, recv_callback_iter, io);
+    free(io->contents);
+  }
+  struct recv_callback_data *recv_data = io->user;
+  // if changed...
+  if (io->lastHash != recv_data->lastHash) {
+    // pass lastHash to next call
+    strncpy(recv_data->lastHash, io->lastHash, MIN(strlen(io->lastHash), 129));
+  }
+  text_component_setText(statusBar, "Ready");
+}
+
 bool recv_callback(struct md_timer *timer, double now) {
   updateStatusBar("Checking for new messages");
   struct recv_callback_data *recv_data = timer->user;
   struct session_keypair *skp = recv_data->skp;
-  struct session_recv_io io;
-  io.kp = skp;
-  io.contents = 0;
-  io.lastHash = recv_data->lastHash;
-  session_recv(&io);
-  updateStatusBar("Updating UI...");
-  if (io.contents) {
-    printf("Found [%zu] messages\n", (size_t)io.contents->count);
-    dynList_iterator_const(io.contents, recv_callback_iter, &io);
-    free(io.contents);
-  }
-  // if changed...
-  if (io.lastHash != recv_data->lastHash) {
-    // pass lastHash to next call
-    strncpy(recv_data->lastHash, io.lastHash, MIN(strlen(io.lastHash), 129));
-  }
-  text_component_setText(statusBar, "Ready");
+  // can't have this go out of scope
+  // because of the net/threading split
+  struct session_recv_io *io = malloc(sizeof(struct session_recv_io));
+  io->kp = skp;
+  io->contents = 0;
+  io->lastHash = recv_data->lastHash;
+  io->cb   = session_recv_cb;
+  io->user = recv_data;
+  session_recv(io);
   return true;
 }
 
@@ -209,12 +258,14 @@ void eventHandler(struct app_window *appwin, struct component *comp, const char 
           return;
         }
         HEAP_ALLOCATE(struct conversation, conf)
+        dynList_init(&conf->messages, sizeof(char *), "Convo messages");
         conf->pubkeyStr = newId;
         if (strcmp(conf->pubkeyStr, identityText->text) == 0) {
           conf->pubkeyStr = strdup("Note to self");
         }
         conf->badgeCount = 0;
         conf->tab = tab_add(convoTab, conf->pubkeyStr, session.activeAppWindow->win);
+        conf->tab->user = conf;
         selectConversation(conf->tab);
         dynList_push(&conversations, conf);
         text_component_setText(statusBar, "conversation created!");
@@ -263,8 +314,24 @@ void eventHandler(struct app_window *appwin, struct component *comp, const char 
       if (strcmp(dest, "Note to self") == 0) {
         dest = identityText->text;
       }
-      //printf("Sending [%s] to [%s]\n", msg, dest);
-      session_send(dest, &current_skp, msg, 0);
+      if (strcmp(dest, "Bot directory") == 0) {
+        dest = "05c87493c457b29a4137c091b59998cb5ffd7fd727d19ba0046deff47abb7adf35";
+      }
+      // copy first 66 bytesnce
+      char *finalDest = malloc(67);
+      memcpy(finalDest, dest, 66);
+      finalDest[66] = 0;
+      HEAP_ALLOCATE(struct message, msg2)
+      msg2->body = strdup(msg);
+      msg2->fromStr = finalDest;
+      struct conversation *convo = convoTab->selectedTab->user;
+      dynList_push(&convo->messages, msg2);
+      // FIXME: no local echo until we reload the convo...
+      // and it's not a dirty render thing...
+
+      //printf("Sending [%s] to [%s]\n", msg, finalDest);
+      session_send(finalDest, &current_skp, msg, 0);
+      
       free(msg);
       text_component_setText(statusBar, "Ready");
       found = true;
@@ -367,6 +434,16 @@ void input_onKeyUp(struct window *win, int key, int scancode, int mod, void *use
   }
 }
 
+// block until ready and return?
+void waitForURLRequest(struct loadWebsite_t *task, struct app *app) {
+  printf("Waiting [%s]\n", task->request.uri);
+  while(!task->response.complete && !app->requestShutdown) {
+    // if 0 is there, we wait for uesr input when we're just waiting for net io
+    og_app_tickForSloppy(app, 100);
+  }
+  printf("Waited\n");
+}
+
 int main(int argc, char *argv[]) {
   time_t t;
   srand((unsigned) time(&t));
@@ -374,7 +451,7 @@ int main(int argc, char *argv[]) {
   if (sodium_init() == -1) {
     return 1;
   }
-  thread_spawn();
+  thread_spawn_worker();
   if (app_init(&session)) {
     printf("compiled with no renders\n");
     return 1;
@@ -420,10 +497,13 @@ int main(int argc, char *argv[]) {
   
   dynList_init(&conversations, sizeof(struct conversation), "conversations");
   
-  goSnodes();
+  struct loadWebsite_t *task = goSnodes();
+  printf("task user[%p] req->user[%p]\n", task->user, task->request.user);
+  waitForURLRequest(task, &session);
   while(!snodeURLs.count) {
     printf("Bootstrapping\n");
-    goSnodes();  
+    task = goSnodes();
+    waitForURLRequest(task, &session);
   }
   printf("Bootstrapped[%zu]\n", (size_t)snodeURLs.count);
   
@@ -456,7 +536,15 @@ int main(int argc, char *argv[]) {
   tabbed_component_updateColors(messagesTab, session.activeAppWindow->win);
   idInput->super.super.event_handlers->onKeyUp = idInput_onKeyUp;
   
-  //getSwarmsnodeUrl(pubKeyHexStr);
+  HEAP_ALLOCATE(struct conversation, conf)
+  dynList_init(&conf->messages, sizeof(char *), "Convo messages");
+  conf->pubkeyStr = strdup("Bot directory");
+  conf->badgeCount = 0;
+  conf->tab = tab_add(convoTab, conf->pubkeyStr, session.activeAppWindow->win);
+  conf->tab->user = conf;
+  selectConversation(conf->tab);
+  dynList_push(&conversations, conf);
+  
   //send("05e308f32ab4bcb9dae4cdd8ebdc912396cd3570832e6a8215e13720c6b0088a3e", &skp, "Hi", 0);
   
   struct recv_callback_data recv_data;
@@ -465,6 +553,14 @@ int main(int argc, char *argv[]) {
   if (1) {
     struct md_timer *reciever = setInterval(recv_callback, 10000);
     reciever->user = &recv_data;
+  } else {
+    // just poll once to avoid stacking issues
+    // we need to be dynamically allocated because we'll respond after recv is called
+    struct session_recv_io *io = malloc(sizeof(struct session_recv_io));
+    io->kp = recv_data.skp;
+    io->contents = 0;
+    io->lastHash = recv_data.lastHash;
+    session_recv(io);
   }
   
   text_component_setText(statusBar, "Ready");
