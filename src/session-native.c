@@ -97,7 +97,8 @@ void selectConversation(struct tab *tab) {
   
   // load messages
   struct conversation *tabConvo = tab->user;
-  dynList_iterator_const(&tabConvo->messages, loadMessage_iterator, 1);
+  int c[] = {1};
+  dynList_iterator_const(&tabConvo->messages, loadMessage_iterator, c);
   
   ll->rootComponent->renderDirty = true;
   if (tab) {
@@ -122,7 +123,7 @@ void *recv_callback_iter(const struct dynListItem *item, void *user) {
   // event system?
   struct handleUnidentifiedMessageType_result *result = item->value;
   //struct session_recv_io *io = user;
-  char *from = malloc(67);
+  char from[67];
   pkToString(result->source, from); // convert to hexstring
   if (result->content->datamessage) {
     printf("%s: %s\n", from, result->content->datamessage->body);
@@ -176,7 +177,6 @@ void *recv_callback_iter(const struct dynListItem *item, void *user) {
     // non-data message
     printf("Non-data message typing[%p] receipt[%p]\n", result->content->typingmessage, result->content->receiptmessage);
   }
-  free(from);
   return user;
 }
 
@@ -213,7 +213,7 @@ bool recv_callback(struct md_timer *timer, double now) {
   struct recv_callback_data *recv_data = timer->user;
   struct session_keypair *skp = recv_data->skp;
   // can't have this go out of scope
-  // because of the net/threading split
+  // because of the net io (threading) split
   struct session_recv_io *io = malloc(sizeof(struct session_recv_io));
   io->kp = skp;
   io->contents = 0;
@@ -436,12 +436,12 @@ void input_onKeyUp(struct window *win, int key, int scancode, int mod, void *use
 
 // block until ready and return?
 void waitForURLRequest(struct loadWebsite_t *task, struct app *app) {
-  printf("Waiting [%s]\n", task->request.uri);
+  //printf("Waiting [%s]\n", task->request.uri);
   while(!task->response.complete && !app->requestShutdown) {
     // if 0 is there, we wait for uesr input when we're just waiting for net io
     og_app_tickForSloppy(app, 100);
   }
-  printf("Waited\n");
+  //printf("Waited\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -498,7 +498,7 @@ int main(int argc, char *argv[]) {
   dynList_init(&conversations, sizeof(struct conversation), "conversations");
   
   struct loadWebsite_t *task = goSnodes();
-  printf("task user[%p] req->user[%p]\n", task->user, task->request.user);
+  //printf("task user[%p] req->user[%p]\n", task->user, task->request.user);
   waitForURLRequest(task, &session);
   while(!snodeURLs.count) {
     printf("Bootstrapping\n");
@@ -552,6 +552,7 @@ int main(int argc, char *argv[]) {
   recv_data.skp = &current_skp;
   if (1) {
     struct md_timer *reciever = setInterval(recv_callback, 10000);
+    reciever->name = "session-native-reciever";
     reciever->user = &recv_data;
   } else {
     // just poll once to avoid stacking issues
