@@ -92,6 +92,7 @@ void selectConversation(struct tab *tab) {
 
   // find messages tabs
   struct llLayerInstance *ll = messagesTab->super.layers.head->value;
+  // FIXME: iterator on destroy on them
   // erase them
   dynList_reset(&ll->rootComponent->children);
   
@@ -104,6 +105,7 @@ void selectConversation(struct tab *tab) {
   if (tab) {
     printf("selectConversation - Enabling input\n");
     input->super.super.disabled = false;
+    // don't enable send button until they type
   } else {
     input->super.super.disabled = true;
     sendButton->super.disabled = true;
@@ -351,7 +353,9 @@ struct component *lastTab = 0;
 // defeat dragging to sort tho..
 bool tabMouse = false;
 void tab_onMouseUp(struct window *win, int button, int mods, void *user) {
-  struct app_window *const appwin = user;
+  // user has to be a type of event
+  //component_onMouseUp(win, button, mods, user);
+  //struct app_window *const appwin = user;
   //printf("tab_onMouseUp [%s] hover[%s]\n", appwin->rootComponent.super.name, appwin->hoverComponent->name);
   tabMouse = false;
   if (!lastTab || !lastTab->parent) {
@@ -361,10 +365,11 @@ void tab_onMouseUp(struct window *win, int button, int mods, void *user) {
   }
   struct tab *tab = lastTab->parent->pickUser;
   selectConversation(tab); // actually make it active...
-  tabbed_component_selectTab((struct tabbed_component *)appwin->hoverComponent, tab);
+  //tabbed_component_selectTab((struct tabbed_component *)appwin->hoverComponent, tab);
 }
 
 void tab_onMouseDown(struct window *win, int x, int y, void *user) {
+  //component_onMouseDown(win, x, y, user);
   struct app_window *const appwin = user;
   // pick
   // translate tab pos into pick
@@ -377,11 +382,13 @@ void tab_onMouseDown(struct window *win, int x, int y, void *user) {
     return;
   }
   struct tab *tab = lastTab->parent->pickUser;
+  // we don't use selectConvo here because we don't want to change messages yet
   struct tabbed_component *tComp = (struct tabbed_component *)appwin->hoverComponent;
   tabbed_component_selectTab(tComp, tab);
 }
 
 void tab_onMouseMove(struct window *win, int16_t x, int16_t y, void *user) {
+  //component_onMouseMove(win, x, y, user);
   //printf("tab_onMouseMove [%d,%d]\n", x, y);
   struct app_window *const appwin = user;
   // feels a tad sluggish
@@ -449,6 +456,7 @@ int main(int argc, char *argv[]) {
   srand((unsigned) time(&t));
 
   if (sodium_init() == -1) {
+    printf("sodium couldn't init\n");
     return 1;
   }
   thread_spawn_worker();
@@ -532,8 +540,8 @@ int main(int argc, char *argv[]) {
   convoTab->super.super.event_handlers->onMouseUp = tab_onMouseUp;
   input->super.super.disabled = true;
   sendButton->super.disabled = true;
-  messagesTab->selectColor = 0x000000FF;
-  tabbed_component_updateColors(messagesTab, session.activeAppWindow->win);
+  //messagesTab->selectColor = 0x000000FF;
+  //tabbed_component_updateColors(messagesTab, session.activeAppWindow->win);
   idInput->super.super.event_handlers->onKeyUp = idInput_onKeyUp;
   
   HEAP_ALLOCATE(struct conversation, conf)
@@ -555,12 +563,15 @@ int main(int argc, char *argv[]) {
     reciever->name = "session-native-reciever";
     reciever->user = &recv_data;
   } else {
+    // good for UI debugging.
     // just poll once to avoid stacking issues
     // we need to be dynamically allocated because we'll respond after recv is called
     struct session_recv_io *io = malloc(sizeof(struct session_recv_io));
     io->kp = recv_data.skp;
     io->contents = 0;
     io->lastHash = recv_data.lastHash;
+    io->cb = session_recv_cb;
+    io->user = &recv_data;
     session_recv(io);
   }
   
