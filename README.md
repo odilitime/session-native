@@ -1,6 +1,6 @@
 ![CMake](https://github.com/odilitime/session-native/workflows/CMake/badge.svg)
 # session-native
-native implementation of Session in c without Electron using the opengem framework (Low dependencies so it's easy to embed in other projects, support opengl as well as linux framebuffer)
+native implementation of Session in c without Electron using the opengem framework (supports OpenGL as well as Linux framebuffer)
 
 ## Binaries
 [No offical release yet, please try the CI artifacts (mac/linux) of one of the workflow run results](https://github.com/odilitime/session-native/actions?query=workflow%3ACMake)
@@ -18,17 +18,16 @@ it will look for a `Resources/` directory in the startup directory for CA bundle
 - Session protocol encryption (sending)
 - Session protocol decryption (recieving)
 - initial UI
+- non-blocking net-io
 
 ### Working On
-- Finishing MVP UI
-- non-blocking net-io
+- Finishing MVP UI / design
+- encrypted database
 - identity management
-- UI design
 - open group support
 - profile support
 - avatar / attachment support
 - mutlithreading
-- encrypted database
 - onion routing support / lokinet support
 - closed group supprt
 
@@ -45,6 +44,7 @@ it will look for a `Resources/` directory in the startup directory for CA bundle
    - SDL1 is software renderer (and will eventually also support OpenGL). This the only one that doesn't required a windowing system like X.
    - SDL2 is OpenGL with fallback to software render (will automatically select the best for your system)
 - libsodium 1.0.18+
+- protobuf-c development headers
 - openssl (mbed support coming soon)
 - opengem (cmake will automatically download via git)
 
@@ -52,7 +52,7 @@ it will look for a `Resources/` directory in the startup directory for CA bundle
 Some of these do not include mbedtls yet, if you know the correct package name for your distro, please let us know
 
 ##### Debian (and derivates)
-`sudo apt-get install libfreetype6-dev libglfw3-dev`
+`sudo apt-get install libfreetype6-dev libglfw3-dev libprotoc-dev libprotobuf-c-dev libsodium-dev
 Also will need either libmbedtls-dev (Debian 9/Ubuntu 16LTS (xenial)) or libpolarssl-dev (Debian 8 or earlier)
 Looks like on Ubuntu, only zesty and newer have 2.4+ of mbedtls
 
@@ -66,7 +66,7 @@ Looks like on Ubuntu, only zesty and newer have 2.4+ of mbedtls
 `sudo emerge freetype glfw`
 
 #### Mac OS X (Brew)
-`sudo brew install glfw freetype mbedtls`
+`sudo brew install glfw openssl protobuf-c libsodium`
 
 #### OpenBSD
 Note: OpenBSD 6.1 has freetype is 1.3.1 and mbedtls is 2.2.1 which won't work (try -CURRENT)
