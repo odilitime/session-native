@@ -80,6 +80,7 @@ jobs:
     runs-on: macos-10.14
     env: 
       MACOSX_DEPLOYMENT_TARGET: 10.9
+      #DEVELOPER_DIR: /Applications/Xcode_10.3.app/Contents/Developer
     steps:
     - uses: actions/checkout@v2
 
@@ -96,7 +97,10 @@ jobs:
 
     - name: Install MacPorts
       run: |
-        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+        #curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.9.sdk.tar.xz
+        #tar xvf MacOSX10.9.sdk.tar.xz
+        # lock to this commit instead of master
+        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/c9676e67351a3a519e37437e196cd0ee9c2180b8/macports-ci
         source ./macports-ci install
         #curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.6.4.tar.bz2
         #tar xf MacPorts-2.6.4.tar.bz2
