@@ -99,9 +99,8 @@ jobs:
       run: |
         #curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.9.sdk.tar.xz
         #tar xvf MacOSX10.9.sdk.tar.xz
-        # lock to this commit instead of master
-        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/c9676e67351a3a519e37437e196cd0ee9c2180b8/macports-ci
-        source ./macports-ci install
+        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+        source ./macports-ci install --version=2.6.4
         #curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.6.4.tar.bz2
         #tar xf MacPorts-2.6.4.tar.bz2
         #cd MacPorts-2.6.4/
