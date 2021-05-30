@@ -79,7 +79,7 @@ jobs:
   macos-build:
     runs-on: macos-10.14
     env: 
-      MACOSX_DEPLOYMENT_TARGET: 10.9
+      MACOSX_DEPLOYMENT_TARGET: 10.10
       #DEVELOPER_DIR: /Applications/Xcode_10.3.app/Contents/Developer
     steps:
     - uses: actions/checkout@v2
@@ -99,6 +99,8 @@ jobs:
       run: |
         #curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.9.sdk.tar.xz
         #tar xvf MacOSX10.9.sdk.tar.xz
+        #ls -la
+        #ls -la /Applications/Xcode_10.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
         source ./macports-ci install --version=2.6.4
         #curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.6.4.tar.bz2
@@ -110,9 +112,9 @@ jobs:
         sudo chmod 755 /opt/local/etc/macports/macports.conf 
         #ls -la /opt/local/etc/macports/
         #tail /opt/local/etc/macports/macports.conf
-        sudo bash -c "echo \"universal_target 10.9\" >> /opt/local/etc/macports/macports.conf"
-        sudo bash -c "echo \"macosx_deployment_target 10.9\" >> /opt/local/etc/macports/macports.conf"
-        sudo bash -c "echo \"macosx_sdk_version	10.9\" >> /opt/local/etc/macports/macports.conf"
+        sudo bash -c "echo \"universal_target 10.10\" >> /opt/local/etc/macports/macports.conf"
+        sudo bash -c "echo \"macosx_deployment_target 10.10\" >> /opt/local/etc/macports/macports.conf"
+        sudo bash -c "echo \"macosx_sdk_version	10.10\" >> /opt/local/etc/macports/macports.conf"
         #tail /opt/local/etc/macports/macports.conf
         sudo /opt/local/bin/port -v selfupdate
         #sudo /opt/local/bin/port clean --all all
