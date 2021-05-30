@@ -18,19 +18,19 @@ jobs:
 
     - name: build deps for windows
       run: |
-        protoc --version
-        whereis protoc
+        #protoc --version
+        #whereis protoc
         git clone -bv3.15.6 https://github.com/protocolbuffers/protobuf
         cd protobuf
         ./autogen.sh
-        find / -name protoc
+        #find / -name protoc
         # ./configure --help
         CC=i686-w64-mingw32-gcc-posix CXX=i686-w64-mingw32-g++-posix ./configure --with-mingw-cross-compiler=g++-mingw-w64-i686 --host=i686-w64-mingw32 --with-protoc=/usr/bin/protoc
         make -j$(nproc)
         sudo make install
         cd ..
-        protoc --version
-        whereis protoc
+        #protoc --version
+        #whereis protoc
         pkgconfig --variable=exec_prefix protobuf
         git clone -bv1.3.3 https://github.com/protobuf-c/protobuf-c.git
         cd protobuf-c
